@@ -52,13 +52,20 @@ flowchart TD
 ```
 
 1. **The Sub-5-Sigma Look-Elsewhere Catastrophe:**  
-   In a $4096 \times 4096$ difference image smoothed by a typical matched-filter PSF ($\theta_{\text{FWHM}} \approx 4\text{ pixels}$), the number of independent resolution elements is $N_{\text{res}} \approx 10^6$. By Rice (1945) and Adler (1981) random field excursion theory, stochastic background noise fluctuations produce $\sim 10^4$ local topological maxima exceeding $2\sigma$ per frame. When evaluating non-sidereal shift-and-stack trajectories across $10^5\text{--}10^7$ trial velocity vectors $(\dot{\alpha}, \dot{\delta})$, uncorrelated noise peaks cohere by pure chance alignment, producing acute False Discovery Rate (FDR) inflation that mimics legitimate planetary signals.
+   In a $4096 \times 4096$ difference image smoothed by a typical matched-filter PSF ($\theta_{\mathrm{FWHM}} \approx 4\text{ pixels}$), the number of independent resolution elements is:
+
+   $$N_{\mathrm{res}} \approx 10^6$$
+
+   By Rice (1945) and Adler (1981) random field excursion theory, stochastic background noise fluctuations produce $\sim 10^4$ local topological maxima exceeding $2\sigma$ per frame. When evaluating non-sidereal shift-and-stack trajectories across $10^5\text{--}10^7$ trial velocity vectors $(\dot{\alpha}, \dot{\delta})$, uncorrelated noise peaks cohere by pure chance alignment, producing acute False Discovery Rate (FDR) inflation that mimics legitimate planetary signals.
 2. **Optical Subtraction Artifact Contamination:**  
    Difference Image Analysis (DIA) generates severe optical systematic artifacts: dipole pairs from seeing and centroid misregistrations, unmasked charge bleeding columns, and diffraction spikes from saturated stars. Traditional single-epoch extractors misclassify these artifacts as high-velocity near-Earth asteroids.
 3. **Planetary Retarded-Time & Spacecraft Parallax Baselines:**  
-   Fusing ground-based surveys with space observatories operating at the Sun-Earth Lagrange L2 point (JWST, Nancy Grace Roman, Euclid) spans an interplanetary baseline of $1.5 \times 10^6\text{ km}$. Light travel time across this baseline is $\approx 5.0\text{ seconds}$. For an asteroid traveling at $30\text{ km/s}$, this produces a $150\text{ km}$ physical displacement, manifesting as an apparent astrometric shear of $\approx 0.21''$ at $1\text{ AU}$. Standard plane-wave astrometric reductions fail, causing genuine cross-observatory associations to be rejected.
+   Fusing ground-based surveys with space observatories operating at the Sun-Earth Lagrange L2 point (JWST, Nancy Grace Roman, Euclid) spans an interplanetary baseline of $1.5 \times 10^6\text{ km}$. Light travel time across this baseline is $\approx 5.0\text{ seconds}$. For an asteroid traveling at $30\text{ km/s}$, this produces a $150\text{ km}$ physical displacement, manifesting as an apparent astrometric shear of $\approx 0.21^{\prime\prime}$ at $1\text{ AU}$. Standard plane-wave astrometric reductions fail, causing genuine cross-observatory associations to be rejected.
 4. **Combinatorial Tracklet Linkage Singularities:**  
-   Standard topocentric tracklet linkers (e.g., standard HelioLinC) cluster observations in tangent-plane angular velocity space $(\dot{\xi}, \dot{\eta})$. Across multi-observatory interplanetary baselines, the topocentric coordinate frame shears by up to $\sim 0.57^\circ$. Furthermore, for near-simultaneous detections across Earth and space ($t_j \approx t_i$), pairwise velocity differencing $(\vec{r}_j - \vec{r}_i)/(t_j - t_i)$ diverges toward infinity, destroying traditional clustering trees.
+   Standard topocentric tracklet linkers (e.g., standard HelioLinC) cluster observations in tangent-plane angular velocity space $(\dot{\xi}, \dot{\eta})$. Across multi-observatory interplanetary baselines, the topocentric coordinate frame shears by up to $\sim 0.57^\circ$. Furthermore, for near-simultaneous detections across Earth and space ($t_j \approx t_i$), pairwise velocity differencing diverges toward infinity, destroying traditional clustering trees:
+
+   $$\lim_{t_j \to t_i} \frac{\vec{r}_j - \vec{r}_i}{t_j - t_i} \to \infty$$
+
 5. **High-Concurrency File System Lock Contention & NVMe Wear:**  
    Multi-process worker pools appending to shared monolithic files encounter severe operating system lock contention (e.g., mandatory file locking collisions across heterogeneous file systems). Simultaneously, naive pipelines writing uncompressed intermediate cutouts generate $>1.2\text{ TB}$ of ephemeral disk churn per million candidates, rapidly exhausting consumer NVMe write endurance (TBW).
 
@@ -102,20 +109,38 @@ flowchart TD
 To link tracklets across interplanetary baselines without coordinate shear or numerical singularities, LUMIA implements a **Two-Branch HelioLinC3D** engine ([`src/LUMIA/physics/heliolinc3d.py`](file:///D:/Programming/Python/ProjectLUMIA/src/LUMIA/physics/heliolinc3d.py)):
 
 * **Branch 1: Stereoscopic Triangulation ($\Delta t \le 1.0\text{ s}$, baseline $b \ge 500,000\text{ km}$):**  
-  For simultaneous or near-simultaneous observations ($|t_{\text{space}} - t_{\text{ground}}| \le 1.0\text{ s}$) between Earth-based surveys and L2 space observatories (e.g., dedicated Target-of-Opportunity triggers or serendipitous field overlaps), the engine bypasses temporal velocity differentiation. It models observation sightlines as 3D skew lines $\mathcal{L}_k: \vec{x}_{\text{obs},k} + \rho_k \hat{n}_k$ and resolves the optimal target position via least-squares closest approach:
-  $$\vec{r}_{\text{obj}} = \arg\min_{\vec{r}} \left( d(\vec{r}, \mathcal{L}_1)^2 + d(\vec{r}, \mathcal{L}_2)^2 \right)$$
+  For simultaneous or near-simultaneous observations ($|t_{\mathrm{space}} - t_{\mathrm{ground}}| \le 1.0\text{ s}$) between Earth-based surveys and L2 space observatories (e.g., dedicated Target-of-Opportunity triggers or serendipitous field overlaps), the engine bypasses temporal velocity differentiation. It models observation sightlines as 3D skew lines:
+
+  $$\mathcal{L}_k: \vec{x}_{\mathrm{obs},k} + \rho_k \hat{n}_k$$
+
+  and resolves the optimal target position via least-squares closest approach:
+
+  $$\vec{r}_{\mathrm{obj}} = \arg\min_{\vec{r}} \left( d(\vec{r}, \mathcal{L}_1)^2 + d(\vec{r}, \mathcal{L}_2)^2 \right)$$
+
   subject to the astrometric covariance miss-distance gating condition:
-  $$d_{\min}(\mathcal{L}_1, \mathcal{L}_2) \le 3 \sqrt{\sigma_{\text{LOS},1}^2 + \sigma_{\text{LOS},2}^2}$$
-  *Kinematic Boundary Note:* For time deltas $\Delta t > 1.0\text{ s}$, an asteroid traveling at $v_{\text{rel}} \approx 30\text{ km/s}$ displaces by tens of kilometers ($>100\text{ km}$ at $\Delta t = 1\text{ hr}$), invalidating static triangulation and mandating dynamical association.
+
+  $$d_{\min}(\mathcal{L}_1, \mathcal{L}_2) \le 3 \sqrt{\sigma_{\mathrm{LOS},1}^2 + \sigma_{\mathrm{LOS},2}^2}$$
+
+  *Kinematic Boundary Note:* For time deltas $\Delta t > 1.0\text{ s}$, an asteroid traveling at $v_{\mathrm{rel}} \approx 30\text{ km/s}$ displaces by tens of kilometers ($>100\text{ km}$ at $\Delta t = 1\text{ hr}$), invalidating static triangulation and mandating dynamical association.
 * **Branch 2: Universal Keplerian Dynamical Association ($\Delta t > 1.0\text{ s}$):**  
-  For multi-epoch, multi-day observation arcs outside the terrestrial Hill sphere ($r \gg r_{\text{Hill},\oplus}$), candidate positions are transformed into the Barycentric Celestial Reference System (BCRS). Trajectories are propagated using universal Keplerian formulations via Stumpff functions ($c_2(z), c_3(z)$) and Keplerian $f$ and $g$ series:
-  $$\vec{r}(t) = f(t, t_0)\,\vec{r}_0 + g(t, t_0)\,\vec{v}_0$$
-  $$\dot{\vec{r}}(t) = \dot{f}(t, t_0)\,\vec{r}_0 + \dot{g}(t, t_0)\,\vec{v}_0$$
+  For multi-epoch, multi-day observation arcs outside the terrestrial Hill sphere ($r \gg r_{\mathrm{Hill},\oplus}$), candidate positions are transformed into the Barycentric Celestial Reference System (BCRS). Trajectories are propagated using universal Keplerian formulations via Stumpff functions ($c_2(z), c_3(z)$) and Keplerian $f$ and $g$ series:
+
+  $$
+  \begin{aligned}
+  \vec{r}(t) &= f(t, t_0)\,\vec{r}_0 + g(t, t_0)\,\vec{v}_0 \\
+  \dot{\vec{r}}(t) &= \dot{f}(t, t_0)\,\vec{r}_0 + \dot{g}(t, t_0)\,\vec{v}_0
+  \end{aligned}
+  $$
+
 * **SNR-Weighted Astrometric $\chi^2$ Gating:**  
   Candidate linkages are evaluated using an SNR-weighted astrometric $\chi^2$ test accounting for photon-noise centroid limits, atmospheric Differential Chromatic Refraction (DCR), and astrometric calibration error:
-  $$\sigma_{\text{astrom}} = \sqrt{\left(\frac{\text{FWHM}}{\beta \cdot \text{SNR}}\right)^2 + \sigma_{\text{calib}}^2 + (\kappa_{\text{filter}} \tan z)^2}$$
+
+  $$\sigma_{\mathrm{astrom}} = \sqrt{\left(\frac{\mathrm{FWHM}}{\beta \cdot \mathrm{SNR}}\right)^2 + \sigma_{\mathrm{calib}}^2 + (\kappa_{\mathrm{filter}} \tan z)^2}$$
+
   where $\beta \approx 2.355 = 2\sqrt{2\ln 2}$ for Gaussian profiles (Lindegren 1978; King 1983) and $\tan z$ represents zenith airmass dependency. The candidate linkage is accepted if:
-  $$\chi^2 = \sum_{i=1}^N \left[ \left(\frac{(\alpha_{i,\text{obs}} - \alpha_{i,\text{model}}) \cos\delta_i}{\sigma_{i,\text{astrom}}}\right)^2 + \left(\frac{\delta_{i,\text{obs}} - \delta_{i,\text{model}}}{\sigma_{i,\text{astrom}}}\right)^2 \right] \le \chi^2_{\text{crit}}(p=0.01, \nu)$$
+
+  $$\chi^2 = \sum_{i=1}^N \left[ \left(\frac{(\alpha_{i,\mathrm{obs}} - \alpha_{i,\mathrm{model}}) \cos\delta_i}{\sigma_{i,\mathrm{astrom}}}\right)^2 + \left(\frac{\delta_{i,\mathrm{obs}} - \delta_{i,\mathrm{model}}}{\sigma_{i,\mathrm{astrom}}}\right)^2 \right] \le \chi^2_{\mathrm{crit}}(p=0.01, \nu)$$
+
   with degrees of freedom $\nu = 2N - 6$ for unconstrained 6-parameter orbital solutions.
 
 ### 2. Planetary Retarded-Time SPICE Ephemerides in BCRS
@@ -123,20 +148,27 @@ To link tracklets across interplanetary baselines without coordinate shear or nu
 To eliminate relativistic coordinate distortion, LUMIA integrates a thread-safe, process-locked ephemeris engine ([`src/LUMIA/physics/ephemerides.py`](file:///D:/Programming/Python/ProjectLUMIA/src/LUMIA/physics/ephemerides.py)) backed by NASA NAIF SPICE (`spiceypy`):
 
 * **High-Precision Earth Orientation (ITRF93 to J2000):** Terrestrial topocentric stations are transformed to BCRS coordinates via IAU precession, nutation, and polar motion rotation matrices (`spice.pxform("ITRF93", "J2000", epoch_et)`), eliminating the $\sim 40\text{ km}$ systematic station errors inherent to low-order 2D GMST approximations.
-* **Relativistic Stellar Aberration Correction:** Corrects observed line-of-sight unit vectors for observer barycentric orbital velocity ($\vec{v}_{\text{obs}} \approx 29.8\text{ km/s}$ for Earth), resolving the $\approx 20.5''$ annual stellar aberration and differential Earth-L2 aberration ($0.1''\text{--}1.5''$):
-  $$\hat{u}_{\text{topo}} = \frac{\hat{u} + \frac{\vec{v}_{\text{obs}}}{c} + (\gamma - 1)(\hat{u} \cdot \hat{\beta})\hat{\beta}}{\gamma(1 + \hat{u} \cdot \vec{\beta})}, \quad \vec{\beta} = \frac{\vec{v}_{\text{obs}}}{c}, \quad \gamma = \frac{1}{\sqrt{1 - \beta^2}}$$
+* **Relativistic Stellar Aberration Correction:** Corrects observed line-of-sight unit vectors for observer barycentric orbital velocity ($\vec{v}_{\mathrm{obs}} \approx 29.8\text{ km/s}$ for Earth), resolving the $\approx 20.5^{\prime\prime}$ annual stellar aberration and differential Earth-L2 aberration ($0.1^{\prime\prime}\text{--}1.5^{\prime\prime}$):
+
+  $$\hat{u}_{\mathrm{topo}} = \frac{\hat{u} + \frac{\vec{v}_{\mathrm{obs}}}{c} + (\gamma - 1)(\hat{u} \cdot \hat{\beta})\hat{\beta}}{\gamma(1 + \hat{u} \cdot \vec{\beta})}, \quad \vec{\beta} = \frac{\vec{v}_{\mathrm{obs}}}{c}, \quad \gamma = \frac{1}{\sqrt{1 - \beta^2}}$$
+
 * **Planetary Retarded-Time Formulation:**
-  - *Blind Search Parameterization:* During blind shift-and-stack and tracklet linkage where object state vectors are unknown *a priori*, emission light-travel time is parameterized across candidate heliocentric/geocentric range slices $\rho_k$ ($\tau_k = t_{\text{obs}} - \rho_k / c$).
+  - *Blind Search Parameterization:* During blind shift-and-stack and tracklet linkage where object state vectors are unknown *a priori*, emission light-travel time is parameterized across candidate heliocentric/geocentric range slices:
+
+    $$\tau_k = t_{\mathrm{obs}} - \frac{\rho_k}{c}$$
+
   - *Iterative Fixed-Point Orbit Refinement:* During candidate orbit determination and known-object precovery, the implicit light-travel time equation:
-    $$\tau = t_{\text{obs}} - \frac{\|\vec{r}_{\text{obj}}(\tau) - \vec{x}_{\text{obs}}(t_{\text{obs}})\|}{c}$$
-    is solved via fixed-point Picard iteration with Banach contraction guarantees ($L = v_{\max} / c < 10^{-4}$), converging in $k \le 4$ iterations ($|\Delta \tau| < 10^{-8}\text{ s}$) to eliminate the $0.21''$ light-time displacement error.
+
+    $$\tau = t_{\mathrm{obs}} - \frac{\|\vec{r}_{\mathrm{obj}}(\tau) - \vec{x}_{\mathrm{obs}}(t_{\mathrm{obs}})\|}{c}$$
+
+    is solved via fixed-point Picard iteration with Banach contraction guarantees ($L = v_{\max} / c < 10^{-4}$), converging in $k \le 4$ iterations ($|\Delta \tau| < 10^{-8}\text{ s}$) to eliminate the $0.21^{\prime\prime}$ light-time displacement error.
 
 ### 3. Two-Stream Neural Adaptation Head
 
 Candidate discrimination in the sub-5-sigma regime decouples spatial morphology from multi-epoch temporal photometric consistency ([`src/LUMIA/ml/adaptation_head.py`](file:///D:/Programming/Python/ProjectLUMIA/src/LUMIA/ml/adaptation_head.py)):
 
 * **Stream A (Spatial Morphology):** Ingests the coadded $\Psi/\Phi$ difference stamp through a GroupNorm convolutional backbone (`GroupNorm(num_groups=8, num_channels=C)` $\to$ GELU $\to$ AdaptiveAvgPool) to detect point-source profile coherence and reject optical subtraction artifacts (dipoles, bleeding columns, diffraction spikes). GroupNorm is chosen specifically for invariance to small-batch truncation ($B \le 8$) during real-time inference.
-* **Stream B (Temporal Consistency):** Evaluates multi-epoch photometric time-series tuples $(\text{flux}_k, \sigma_{\text{flux},k}, \text{FWHM}_k)$ across $k \in [1, N]$ exposures via dense multi-layer perceptrons to reject cosmic rays, single-epoch noise transients, and variable stars.
+* **Stream B (Temporal Consistency):** Evaluates multi-epoch photometric time-series tuples $(f_k, \sigma_{f,k}, \mathrm{FWHM}_k)$ across $k \in [1, N]$ exposures via dense multi-layer perceptrons to reject cosmic rays, single-epoch noise transients, and variable stars.
 * **Calibrated Representation Fusion:** Latent spatial ($128\text{-d}$) and temporal ($64\text{-d}$) embeddings are concatenated and passed through a fused classification head calibrated with post-hoc Temperature Scaling, ensuring well-calibrated class probabilities even in high-entropy noise tails.
 
 ### 4. Worker-Partitioned Storage & Sharded Zarr v3
@@ -243,7 +275,7 @@ Project LUMIA follows an open-science, RFC-governed engineering roadmap. Current
 
 ### Prerequisites
 
-* **Operating System:** Windows 11, Linux (Ubuntu 22.04+), or macOS.
+* **Operating System:** Windows 11
 * **Python Runtime:** Python `>= 3.14`
 * **Package Manager:** [`uv`](https://docs.astral.sh/uv/) (strongly recommended for deterministic lockfile resolution)
 * **Frontend Runtime:** Node.js `>= 20.0.0` and `npm` (for the React triage interface)
@@ -292,39 +324,22 @@ uv run python run_lumia_dev.py
 * Backend API documentation: `http://localhost:8000/docs`
 * Candidate Triage Dashboard: `http://localhost:5173`
 
----
-
-## Citation
-
-If you utilize Project LUMIA in your research, computational pipeline, or grant proposals, please cite the software framework as follows:
-
-```bibtex
-@software{project_lumia_2026,
-  author       = {Project LUMIA Collaboration},
-  title        = {Project LUMIA: High-Throughput Sub-Threshold Interplanetary Asteroid Discovery Pipeline},
-  year         = {2026},
-  version      = {0.2.0},
-  publisher    = {GitHub},
-  url          = {https://github.com/TomMaverick/ProjectLUMIA}
-}
-```
-
-A [`CITATION.cff`](file:///D:/Programming/Python/ProjectLUMIA/CITATION.cff) file is also provided in the repository root for automated reference parsing.
 
 ---
 
 ## References & Foundational Literature
 
-1. **Zackay, B., Ofek, E. O., & Gal-Yam, A. (2016).** Proper Image Subtraction—Optimal Transient Detection, Photometry, and Astrometry. *The Astrophysical Journal*, 830(1), 27. [doi:10.3847/0004-637X/830/1/27](https://doi.org/10.3847/0004-637X/830/1/27)
-2. **Holman, M. J., et al. (2018).** A Non-threaded, Boundary-conforming Approach to Heliocentric Orbit Linking (HelioLinC). *The Astronomical Journal*, 156(3), 135. [doi:10.3847/1538-3881/aad458](https://doi.org/10.3847/1538-3881/aad458)
-3. **Acton, C. H. (1996).** Ancillary Data Services of NASA's Navigation and Ancillary Information Facility (NAIF / SPICE). *Planetary and Space Science*, 44(1), 65–70. [doi:10.1016/0032-0633(95)00107-7](https://doi.org/10.1016/0032-0633(95)00107-7)
-4. **Granvik, M., et al. (2018).** Debiased Near-Earth Object Population Model. *Icarus*, 312, 181–201. [doi:10.1016/j.icarus.2018.04.018](https://doi.org/10.1016/j.icarus.2018.04.018)
-5. **Harris, A. W., & Chodas, P. W. (2021).** The Population of Near-Earth Asteroids Revisited. *Icarus*, 365, 114452. [doi:10.1016/j.icarus.2021.114452](https://doi.org/10.1016/j.icarus.2021.114452)
-6. **Lindegren, L. (1978).** Photoelectric Observations of Stars with a Slit Micrometer. *Modern Astrometry*, IAU Colloq. 48, 197–217.
-7. **King, I. R. (1983).** Accuracy of Measurement of Star Images on a Pixel Array. *Publications of the Astronomical Society of the Pacific*, 95, 163–168.
-8. **Rice, S. O. (1945).** Mathematical Analysis of Random Noise. *Bell System Technical Journal*, 24(1), 46–156.
-9. **Adler, R. J. (1981).** *The Geometry of Random Fields*. John Wiley & Sons.
-10. **Cui, Y., et al. (2019).** Class-Balanced Loss Based on Effective Number of Samples. *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, 9268–9277.
+1. **Zackay, B., Ofek, E. O., & Gal-Yam, A. (2016).** Proper Image Subtraction—Optimal Transient Detection, Photometry, and Hypothesis Testing. *The Astrophysical Journal*, 830(1), 27. [doi:10.3847/0004-637X/830/1/27](https://doi.org/10.3847/0004-637X/830/1/27)
+2. **Holman, M. J., Payne, M. J., Blankley, P., Janssen, R., & Kuindersma, S. (2018).** HelioLinC: A Novel Approach to the Minor Planet Linking Problem. *The Astronomical Journal*, 156(3), 135. [doi:10.3847/1538-3881/aad69a](https://doi.org/10.3847/1538-3881/aad69a)
+3. **Acton, C. H. (1996).** Ancillary Data Services of NASA's Navigation and Ancillary Information Facility. *Planetary and Space Science*, 44(1), 65–70. [doi:10.1016/0032-0633(95)00107-7](https://doi.org/10.1016/0032-0633(95)00107-7)
+4. **Granvik, M., Morbidelli, A., Jedicke, R., et al. (2018).** Debiased Orbit and Absolute-Magnitude Distributions for Near-Earth Objects. *Icarus*, 312, 181–207. [doi:10.1016/j.icarus.2018.04.018](https://doi.org/10.1016/j.icarus.2018.04.018)
+5. **Harris, A. W., & Chodas, P. W. (2021).** The Population of Near-Earth Asteroids Revisited and Updated. *Icarus*, 365, 114452. [doi:10.1016/j.icarus.2021.114452](https://doi.org/10.1016/j.icarus.2021.114452)
+6. **Lindegren, L. (1978).** Photoelectric Astrometry: A Comparison of Methods for Precise Image Location. In *Modern Astrometry* (IAU Colloq. 48, Vienna), pp. 197–217. [doi:10.1017/S0252921100074157](https://doi.org/10.1017/S0252921100074157)
+7. **King, I. R. (1983).** Accuracy of Measurement of Star Images on a Pixel Array. *Publications of the Astronomical Society of the Pacific*, 95(565), 163–168. [doi:10.1086/131139](https://doi.org/10.1086/131139)
+8. **Rice, S. O. (1945).** Mathematical Analysis of Random Noise. *Bell System Technical Journal*, 24(1), 46–156. [doi:10.1002/j.1538-7305.1945.tb00453.x](https://doi.org/10.1002/j.1538-7305.1945.tb00453.x)
+9. **Adler, R. J. (1981).** *The Geometry of Random Fields*. John Wiley & Sons (reprinted by SIAM, 2010). [doi:10.1137/1.9780898718980](https://doi.org/10.1137/1.9780898718980)
+10. **Cui, Y., Jia, M., Lin, T.-Y., Song, Y., & Belongie, S. (2019).** Class-Balanced Loss Based on Effective Number of Samples. In *Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)*, pp. 9268–9277. [doi:10.1109/CVPR.2019.00949](https://doi.org/10.1109/CVPR.2019.00949)
+11. **Benjamini, Y., & Hochberg, Y. (1995).** Controlling the False Discovery Rate: A Practical and Powerful Approach to Multiple Testing. *Journal of the Royal Statistical Society: Series B (Methodological)*, 57(1), 289–300. [doi:10.1111/j.2517-6161.1995.tb02031.x](https://doi.org/10.1111/j.2517-6161.1995.tb02031.x)
 
 ---
 

@@ -22,7 +22,7 @@ Expanding LUMIA to multi-survey ingestion, space telescopes, and sub-5-sigma dis
 
 1. **The Sub-5-Sigma Look-Elsewhere Explosion:** In the $1.5\sigma \le SNR < 5.0\sigma$ regime, individual detections cannot be isolated by intensity thresholding without incurring hundreds of thousands of false alarms per gigapixel frame. When shift-and-stacking over $10^5\text{--}10^7$ candidate velocity trajectories, uncorrelated Gaussian and Poisson noise fluctuations inevitably produce coherent stacked peaks exceeding $5\sigma$ by chance alignment alone.
 2. **Covariate Shift in Cold-Start Training:** Dedicated telescope neural adaptation heads cannot be trained solely on cataloged asteroids from MPC/Horizons. Known objects are overwhelmingly bright ($V \le 20$, $SNR \gg 5$), leaving models unprepared to evaluate noisy, low-contrast stamps ($SNR \le 3$) during blind search. Simultaneously, training on blank quiescent sky fails to expose models to realistic optical subtraction artifacts (dipoles, bleeding columns, diffraction spikes).
-3. **Planetary Retarded-Time & Parallax Baselines:** Spacecraft at Sun-Earth Lagrange L2 (JWST, Roman, Euclid) operate $1.5 \times 10^6\text{ km}$ from Earth. Light requires $\approx 5.0\text{ seconds}$ to traverse this baseline. For an asteroid moving at $30\text{ km/s}$, this produces a $150\text{ km}$ displacement, translating to an apparent sky shift of $\approx 0.21''$ at $1\text{ AU}$. Applying standard plane-wave stellar $BJD_{TDB}$ formulas without solving the finite-range planetary retarded-time equation causes genuine ground-space linkages to be rejected as spurious.
+3. **Planetary Retarded-Time & Parallax Baselines:** Spacecraft at Sun-Earth Lagrange L2 (JWST, Roman, Euclid) operate $1.5 \times 10^6\text{ km}$ from Earth. Light requires $\approx 5.0\text{ seconds}$ to traverse this baseline. For an asteroid moving at $30\text{ km/s}$, this produces a $150\text{ km}$ displacement, translating to an apparent sky shift of $\approx 0.21^{\prime\prime}$ at $1\text{ AU}$. Applying standard plane-wave stellar $BJD_{TDB}$ formulas without solving the finite-range planetary retarded-time equation causes genuine ground-space linkages to be rejected as spurious.
 4. **HelioLinC3D Division-by-Zero Singularity & Coordinate Shear:** Ground-based HelioLinC relies on tangent-plane velocity clustering $(\dot{\xi}, \dot{\eta})$ assuming a shared topocentric viewpoint. Across interplanetary baselines, topocentric coordinates shear by up to $\sim 0.57^\circ$. Furthermore, for near-simultaneous detections across Earth and space ($t_j \approx t_i$), pairwise velocity differencing $(\vec{r}_j - \vec{r}_i)/(t_j - t_i)$ diverges toward infinity.
 5. **Storage Concurrency & SSD Endurance:** Ingesting multi-survey datasets across concurrent crawler processes on Windows NTFS triggers mandatory file locking collisions (`WinError 32`) if workers write to shared sharded files. Additionally, downloading multi-megabyte full detector exposures from surveys without lightweight cutout endpoints quickly exhausts in-memory buffers and thrashes host SSD write endurance.
 
@@ -36,7 +36,7 @@ Expanding LUMIA to multi-survey ingestion, space telescopes, and sub-5-sigma dis
 * **G3 (Covariate Shift Mitigation):** Implement automated faint synthetic asteroid injection ($1.5\sigma \le SNR < 5.0\sigma$) and active Difference Image Analysis (DIA) optical artifact mining, ensuring training datasets match the faint discovery distribution.
 * **G4 (Planetary Retarded-Time & SPICE Integration):** Solve the planetary retarded-time equation $\tau = t_{\text{obs}} - \rho(\tau)/c$ in BCRS, loading complete SPICE kernel chains (`de440.bsp`, leapseconds `naif0012.tls`, and mission SPKs) behind process locks.
 * **G5 (Two-Branch HelioLinC3D Engine):** Implement a bifurcated linking engine with a stereoscopic triangulation branch for near-simultaneous observations ($|t_j - t_i| < 1\text{ hour}$, baseline $\ge 500,000\text{ km}$) and a dynamical association branch for multi-day arcs using Keplerian $f$ and $g$ propagation.
-* **G6 (SNR-Weighted Astrometric Gating):** Replace static $0.15''$ RMS gates with an SNR-dependent $\chi^2$ statistical test accounting for photon-noise centroid limits ($\sigma_{\text{centroid}} \approx \text{FWHM} / (2 \cdot SNR)$) and atmospheric Differential Chromatic Refraction (DCR).
+* **G6 (SNR-Weighted Astrometric Gating):** Replace static $0.15^{\prime\prime}$ RMS gates with an SNR-dependent $\chi^2$ statistical test accounting for photon-noise centroid limits ($\sigma_{\text{centroid}} \approx \text{FWHM} / (2 \cdot SNR)$) and atmospheric Differential Chromatic Refraction (DCR).
 * **G7 (SSD-Safe Ingestion & Concurrency Guard):** Mandate Server-Side Operations for Data Access (SODA) / Butler pre-cropped cutouts to eliminate full-frame downloads, and isolate crawler writes into worker-partitioned stores to prevent Windows file locking collisions.
 * **G8 (ADR-0002 Contract Preservation):** Extend the canonical `CandidateDetection` schema with optional survey provenance and observer state vector fields, preserving a single source of truth across all modules.
 
@@ -76,8 +76,8 @@ Expanding LUMIA to multi-survey ingestion, space telescopes, and sub-5-sigma dis
 * **Then:**
   1. The astrometry engine loads the SPICE kernel hierarchy and evaluates observer 3D barycentric vectors $\vec{x}_{\text{obs}}(t)$ in BCRS.
   2. For concurrent detections ($|t_{\text{space}} - t_{\text{ground}}| < 1\text{ hour}$), the stereoscopic triangulation branch directly determines the topocentric range $\rho$ from the $1.5 \times 10^6\text{ km}$ baseline parallax.
-  3. The planetary retarded-time equation $\tau = t_{\text{obs}} - \rho/c$ resolves emission epochs, eliminating the $\approx 0.21''$ light-time displacement error.
-  4. Candidate linkages are validated using an SNR-weighted $\chi^2$ gate, successfully confirming the low-SNR Keplerian orbit.
+   3. The planetary retarded-time equation $\tau = t_{\text{obs}} - \rho/c$ resolves emission epochs, eliminating the $\approx 0.21^{\prime\prime}$ light-time displacement error.
+   4. Candidate linkages are validated using an SNR-weighted $\chi^2$ gate, successfully confirming the low-SNR Keplerian orbit.
 
 --------------------------------------------------------------------------------
 
@@ -88,7 +88,7 @@ Expanding LUMIA to multi-survey ingestion, space telescopes, and sub-5-sigma dis
 | Observatory | Orbit / Platform | Primary Solar System Mission Role | Discovery vs. Follow-up Mechanism |
 | :--- | :--- | :--- | :--- |
 | **NEOWISE (WISE)** | Polar Sun-Synchronous LEO ($\sim 500\text{ km}$) | Dedicated Blind Survey (Thermal IR) | **Active Discovery Engine:** Discovered tens of thousands of asteroids, hundreds of NEOs and comets in $3.4\,\mu\text{m}$ (W1) and $4.6\,\mu\text{m}$ (W2). |
-| **Hubble (HST)** | Low Earth Orbit ($\sim 540\text{ km}$) | Targeted Follow-Up & Archival Serendipity | **Predominantly Targeted / Serendipitous Discovery:** High resolution ($0.05''/\text{px}$), small field of view ($3.3' \times 3.3'$). Blind search is inefficient, but archival search algorithms discovered hundreds of faint KBOs (including Arrokoth / 2014 MU69). |
+| **Hubble (HST)** | Low Earth Orbit ($\sim 540\text{ km}$) | Targeted Follow-Up & Archival Serendipity | **Predominantly Targeted / Serendipitous Discovery:** High resolution ($0.05^{\prime\prime}/\mathrm{px}$), small field of view ($3.3' \times 3.3'$). Blind search is inefficient, but archival search algorithms discovered hundreds of faint KBOs (including Arrokoth / 2014 MU69). |
 | **JWST** | Sun-Earth L2 Halo Orbit ($\sim 1.5 \times 10^6\text{ km}$) | Targeted Characterization & Serendipity | **Targeted Physical Analysis & Serendipitous Detection:** MIRI/NIRCam sensitivity detects extremely faint sub-kilometer thermal signatures (e.g., Müller et al. 2023 detected an unknown $100\text{ m}$ asteroid in calibration fields). Not an all-sky discovery engine. |
 | **Nancy Grace Roman** | Sun-Earth L2 Halo Orbit ($\sim 1.5 \times 10^6\text{ km}$) | Wide-Field Survey & Precovery | **Major Future Discovery Engine:** Field of view $100\times$ HST ($0.28\text{ deg}^2$). High Latitude Wide Area Survey will discover thousands of faint TNOs/KBOs down to $V \sim 27$. |
 | **Euclid** | Sun-Earth L2 Halo Orbit ($\sim 1.5 \times 10^6\text{ km}$) | Wide-Field Survey & Serendipity | **Massive Serendipitous Discovery:** $0.5\text{ deg}^2$ FOV surveying $15,000\text{ deg}^2$. Estimated to observe $> 150,000$ asteroids down to $V \sim 24.5$ (Carry et al.). |
@@ -106,7 +106,9 @@ Expanding LUMIA to multi-survey ingestion, space telescopes, and sub-5-sigma dis
 2. **Planetary Retarded-Time Equation Across Earth-L2 Baselines:**
    * The Earth-L2 baseline is $b \approx 1.5 \times 10^6\text{ km}$, yielding a light-travel time differential $\Delta \tau = b/c \approx 5.0\text{ seconds}$. For an NEO moving at $30\text{ km/s}$, this produces a $150\text{ km}$ physical displacement, projecting to $\approx 0.21\text{ arcsec}$ apparent shift at $1\text{ AU}$.
    * Standard plane-wave stellar $BJD_{TDB}$ formulas are physically invalid for moving solar system targets. Instead, Module 5 solves the **planetary retarded-time equation**:
+
      $$\vec{x}_{\text{obs}}(t_{\text{obs}}) - \vec{r}_{\text{obj}}(\tau) = \rho(\tau) \hat{n}, \quad \text{where } \tau = t_{\text{obs}} - \frac{\rho(\tau)}{c}$$
+
    * Object states are evaluated strictly at the emission epoch $\tau$ in the Barycentric Celestial Reference System (BCRS).
 3. **NAIF SPICE Kernel Hierarchy & Thread Safety:**
    * Spacecraft SPKs for L2 orbiters define positions relative to Earth or Sun-Earth L2, not the Solar System Barycenter (SSB, NAIF ID `0`).
@@ -182,17 +184,23 @@ flowchart TD
 * **Thread/Process Safety:** Manages NAIF SPICE C-kernel handles behind a process-level mutual exclusion lock. Prevents thread-unsafe global state corruption in `spiceypy`.
 * **Kernel Hierarchy:** Loads leapsecond kernel (`naif0012.tls`), solar system planetary ephemeris (`de440.bsp`), and mission-specific spacecraft kernels (e.g., `jwst_horizons_*.bsp`, `roman_*.bsp`).
 * **Planetary Retarded-Time Solution:** For an observer at BCRS position $\vec{x}_{\text{obs}}(t_{\text{obs}})$ and target at $\vec{r}(\tau)$, solves the implicit light-travel time equation via fixed-point iteration:
+
   $$\tau_{k+1} = t_{\text{obs}} - \frac{\|\vec{r}(\tau_k) - \vec{x}_{\text{obs}}(t_{\text{obs}})\|}{c}$$
+
   Terminates when $|\tau_{k+1} - \tau_k| < 10^{-6}\text{ s}$ (typically 2–3 iterations). Evaluates observer state vectors $(\vec{x}_{\text{obs}}, \vec{v}_{\text{obs}})$ relative to the Solar System Barycenter (NAIF ID `0`) strictly at the retarded epoch $\tau$.
 
 #### 2. Two-Branch HelioLinC3D Engine (`src/LUMIA/physics/heliolinc3d.py`)
 HelioLinC3D bifurcates candidate association to eliminate the division-by-zero singularity encountered when linking simultaneous observations across interplanetary baselines:
 * **Branch A (Stereoscopic Triangulation):** Activated when observations satisfy $|t_j - t_i| < 1.0\text{ hour}$ and baseline separation $\|\vec{x}_{\text{obs}, j} - \vec{x}_{\text{obs}, i}\| \ge 500,000\text{ km}$ (e.g., Cerro Pachón to Sun-Earth L2). Solves the non-degenerate 3D intersection of line-of-sight unit vectors $\hat{u}_i$ and $\hat{u}_j$:
+
   $$\vec{r} = \vec{x}_{\text{obs}, i} + \rho_i \hat{u}_i = \vec{x}_{\text{obs}, j} + \rho_j \hat{u}_j$$
+
   Yields instantaneous 3D heliocentric position $\vec{r}$ without requiring numerical velocity differencing.
 * **Branch B (Dynamical Association):** Activated for observations separated by $|t_j - t_i| \ge 1.0\text{ hour}$. Transforms observed topocentric angular positions into heliocentric position and velocity vectors by gridding over heliocentric distance $r_H$ and radial velocity $\dot{r}_H$. Propagates state vectors across epochs using universal Keplerian $f$ and $g$ functions.
 * **Clustering & Gating:** Candidate pairs are clustered in 6D phase space using a KD-tree. Linkages are validated against an SNR-weighted astrometric $\chi^2$ gate:
+
   $$\chi^2 = \sum_{k=1}^N \frac{(\Delta \theta_k)^2}{\sigma_{\text{centroid}, k}^2 + \sigma_{\text{sys}}^2 + \sigma_{\text{DCR}, k}^2} \le \chi^2_{\text{crit}}(2N - p, \alpha = 0.01)$$
+
   where $\sigma_{\text{centroid}} \approx \text{FWHM} / (2 \cdot SNR)$, dynamically accommodating positional scatter in the $1.5\sigma \le SNR < 5.0\sigma$ regime.
 
 #### 3. Sub-5-Sigma Candidate Generation & Verification (`src/LUMIA/detection/stacker.py`)
@@ -228,21 +236,23 @@ Every integrated survey employs a dedicated neural evaluation head processing tw
 
 ### Alternative 3: Standard Plane-Wave Barycentric Julian Date ($BJD_{TDB}$)
 * **What was proposed:** Correcting observation timestamps across ground and space observatories using standard stellar plane-wave barycentric formulas:
+
   $$t_{\text{bary}} = t_{\text{UTC}} + \Delta t_{\text{clock}} + \frac{\vec{r}_{\text{obs}} \cdot \hat{n}}{c}$$
+
 * **Pros:** Computationally trivial single-line dot product; universally implemented in standard astronomical toolkits (e.g., Astropy `Time.light_travel_time`).
-* **Cons:** Assumes the celestial source is located at infinite distance with planar wavefronts. Across the $1.5 \times 10^6\text{ km}$ Earth-L2 baseline, light-travel time differs by $\approx 5.0\text{ seconds}$. For a typical solar system object with transverse velocity $30\text{ km/s}$ at $1\text{ AU}$, this uncorrected time offset introduces an apparent astrometric position error of $\approx 0.21''$—larger than typical astrometric residuals ($0.05''\text{--}0.10''$)—causing valid cross-facility tracklets to fail orbit fit thresholds.
+* **Cons:** Assumes the celestial source is located at infinite distance with planar wavefronts. Across the $1.5 \times 10^6\text{ km}$ Earth-L2 baseline, light-travel time differs by $\approx 5.0\text{ seconds}$. For a typical solar system object with transverse velocity $30\text{ km/s}$ at $1\text{ AU}$, this uncorrected time offset introduces an apparent astrometric position error of $\approx 0.21^{\prime\prime}$—larger than typical astrometric residuals ($0.05^{\prime\prime}\text{--}0.10^{\prime\prime}$)—causing valid cross-facility tracklets to fail orbit fit thresholds.
 * **Why rejected:** Solar system bodies are at finite distances requiring the full non-linear planetary retarded-time equation $\tau = t_{\text{obs}} - \|\vec{r}(\tau) - \vec{x}_{\text{obs}}(t_{\text{obs}})\|/c$ evaluated in BCRS.
 
-### Alternative 4: Static $0.15''$ Astrometric RMS Residual Gate
-* **What was proposed:** Enforcing a hard rejection threshold of $RMS \le 0.15''$ on astrometric tracklet residuals during multi-survey association.
+### Alternative 4: Static $0.15^{\prime\prime}$ Astrometric RMS Residual Gate
+* **What was proposed:** Enforcing a hard rejection threshold of $\mathrm{RMS} \le 0.15^{\prime\prime}$ on astrometric tracklet residuals during multi-survey association.
 * **Pros:** Standard rule of thumb derived from bright, high-SNR ($SNR > 10$) ground-based asteroid astrometry.
-* **Cons:** Fundamentally contradicts the physics of faint-source centroiding. By the Cramér-Rao lower bound, centroid uncertainty scales inversely with SNR ($\sigma_{\text{centroid}} \approx \text{FWHM} / (2 \cdot SNR)$). For typical seeing of $1.5''\text{--}2.0''$, an object at $SNR = 2.5$ exhibits centroid scatter of $0.30''\text{--}0.40''$. A static $0.15''$ cutoff would reject 100% of real discoveries in the sub-$5\sigma$ regime.
+* **Cons:** Fundamentally contradicts the physics of faint-source centroiding. By the Cramér-Rao lower bound, centroid uncertainty scales inversely with SNR ($\sigma_{\text{centroid}} \approx \text{FWHM} / (2 \cdot SNR)$). For typical seeing of $1.5^{\prime\prime}\text{--}2.0^{\prime\prime}$, an object at $SNR = 2.5$ exhibits centroid scatter of $0.30^{\prime\prime}\text{--}0.40^{\prime\prime}$. A static $0.15^{\prime\prime}$ cutoff would reject 100% of real discoveries in the sub-$5\sigma$ regime.
 * **Why rejected:** Replaced with an SNR-weighted astrometric $\chi^2$ gate that dynamically scales acceptance tolerances based on photon noise, instrument pixel scale, and atmospheric differential chromatic refraction.
 
 ### Alternative 5: Single Monolithic Neural Classifier Across All Surveys
 * **What was proposed:** Training a single universal neural network backbone to classify candidate detections across ZTF, Pan-STARRS, Rubin, and space telescopes.
 * **Pros:** Single model architecture, single weights file to train and deploy.
-* **Cons:** Vastly disparate optical characteristics across instruments—ranging from ZTF's wide-field $1.0''/\text{pixel}$ with broad seeing to Rubin's $0.20''/\text{pixel}$ and JWST's diffraction-limited space PSF ($0.03''\text{--}0.06''/\text{pixel}$)—induce severe negative transfer and catastrophic forgetting when forced into a shared convolutional feature extractor.
+* **Cons:** Vastly disparate optical characteristics across instruments—ranging from ZTF's wide-field $1.0^{\prime\prime}/\mathrm{pixel}$ with broad seeing to Rubin's $0.20^{\prime\prime}/\mathrm{pixel}$ and JWST's diffraction-limited space PSF ($0.03^{\prime\prime}\text{--}0.06^{\prime\prime}/\mathrm{pixel}$)—induce severe negative transfer and catastrophic forgetting when forced into a shared convolutional feature extractor.
 * **Why rejected:** Adopted a modular multi-head design where each survey utilizes a dedicated adaptation head tailored to its specific PSF and noise properties, outputting normalized embeddings into a shared verification space.
 
 --------------------------------------------------------------------------------
