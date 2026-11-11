@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use Project LUMIA in your scientific research or astrodynamics calculations, please cite it as below."
+authors:
+  - family-names: "Maverick"
+    given-names: "Tom"
+    affiliation: "Project LUMIA Collaboration"
+title: "Project LUMIA: Low-SNR Unidentified Moving Interplanetary Analyzer"
+version: 0.2.0
+date-released: 2026-11-10
+url: "https://github.com/TomMaverick/ProjectLUMIA"
+repository-code: "https://github.com/TomMaverick/ProjectLUMIA"
+license: "MIT"
+keywords:
+  - astrophysics
+  - planetary-defense
+  - asteroid-detection
+  - heliolinc3d
+  - orbit-determination
+  - deep-learning
+  - shift-and-stack

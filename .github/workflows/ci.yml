@@ -1,0 +1,42 @@
+name: Scientific Verification & Boundary Firewall CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  verify:
+    name: Lint, Type Check & Boundary Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "latest"
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+
+      - name: Synchronize Virtual Environment
+        run: uv sync
+
+      - name: Lint with Ruff
+        run: uv run ruff check .
+
+      - name: Static Type Checking with mypy
+        run: uv run mypy
+
+      - name: Enforce AST Architectural Boundaries
+        run: uv run pytest tests/test_security_and_boundaries.py
+
+      - name: Execute Scientific Unit & Integration Test Suite
+        run: uv run pytest

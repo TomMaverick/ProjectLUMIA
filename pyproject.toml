@@ -1,0 +1,98 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "projectlumia"
+version = "0.2.0"
+description = "Low-SNR Unidentified Moving Interplanetary Analyzer"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.14"
+dependencies = [
+    "astropy>=8.0.2",
+    "argon2-cffi>=23.1.0",
+    "duckdb>=2.0.0",
+    "fastapi>=0.150.0",
+    "filelock>=3.13.0",
+    "numpy>=2.5.4",
+    "photutils>=3.1.1",
+    "prefect>=3.9.1",
+    "pydantic>=2.14.3",
+    "psycopg[binary]>=3.2",
+    "pyyaml>=6.0.3",
+    "requests>=2.31.0",
+    "scipy>=1.18.1",
+    "sqlalchemy>=2.1.8",
+    "torch==2.15.0.dev20260928+cu130",
+    "h5py>=3.16.0",
+    "astroquery>=0.4.11",
+    "pandas>=3.1.1",
+    "tqdm>=4.70.1",
+    "scikit-learn>=1.9.1",
+    "spiceypy>=8.3.0",
+    "urllib3>=2.2.0",
+    "zarr>=3.4.2",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1",
+    "pytest>=9.2.0",
+    "pytest-httpx>=0.36.2",
+    "responses>=0.26.3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/LUMIA"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+
+[tool.ruff]
+target-version = "py314"
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "B", "SIM", "UP", "I", "TC"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["LUMIA"]
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel"]
+
+[tool.mypy]
+python_version = "3.14"
+mypy_path = "src"
+strict = true
+plugins = ["pydantic.mypy"]
+
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
+
+[[tool.mypy.overrides]]
+module = [
+    "astropy.*",
+    "photutils.*",
+    "scipy.*",
+    "yaml.*",
+]
+ignore_missing_imports = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-nightly" }
+torchvision = { index = "pytorch-nightly" }
+
+[[tool.uv.index]]
+name = "pytorch-nightly"
+url = "https://download.pytorch.org/whl/nightly/cu130"
+explicit = true
+
+[tool.uv]
+prerelease = "allow"
+environments = ["sys_platform == 'win32'"]

@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@theme {
+  /* Core Observatory Surfaces */
+  --color-lumia-bg: #090a0f;
+  --color-lumia-sunken: #0d0f17;
+  --color-lumia-surface: #11131c;
+  --color-lumia-elevated: #181b28;
+  --color-lumia-border: #26293d;
+  --color-lumia-border-strong: #343952;
+
+  /* Observatory Purple Brand & Interactive Accents */
+  --color-lumia-purple-subtle: #24103a;
+  --color-lumia-purple-dark: #3b185f;
+  --color-lumia-purple: #581c87;
+  --color-lumia-purple-bright: #7e22ce;
+  --color-lumia-purple-focus: #a855f7;
+  --color-lumia-purple-text: #e9d5ff;
+
+  /* Semantic Observatory States */
+  --color-lumia-real-bg: rgba(6, 78, 59, 0.45);
+  --color-lumia-real-border: #059669;
+  --color-lumia-real-text: #6ee7b7;
+
+  --color-lumia-bogus-bg: rgba(76, 5, 25, 0.55);
+  --color-lumia-bogus-border: #e11d48;
+  --color-lumia-bogus-text: #fda4af;
+
+  --color-lumia-warn-bg: rgba(69, 26, 3, 0.55);
+  --color-lumia-warn-border: #d97706;
+  --color-lumia-warn-text: #fcd34d;
+
+  --color-lumia-olap-bg: rgba(8, 51, 68, 0.50);
+  --color-lumia-olap-border: #0e7490;
+  --color-lumia-olap-text: #67e8f9;
+
+  /* Typography Families */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", ui-monospace, SFMono-Regular, Consolas, monospace;
+
+  /* 16:9 Observatory Viewport Breakpoints */
+  --breakpoint-hd: 80rem;     /* 1280px (1280x720 720p) */
+  --breakpoint-fhd: 120rem;   /* 1920px (1920x1080 1080p) */
+  --breakpoint-qhd: 160rem;   /* 2560px (2560x1440 1440p) */
+  --breakpoint-uhd: 220rem;   /* 3520px+ (3840x2160 4K UHD) */
+
+  /* Elevation & Low-Glare Shadows */
+  --shadow-lumia-panel: 0 8px 24px -4px rgba(0, 0, 0, 0.55);
+  --shadow-lumia-modal: 0 20px 48px -8px rgba(0, 0, 0, 0.80), 0 0 0 1px #3b185f;
+  --shadow-lumia-focus: 0 0 0 2px #090a0f, 0 0 0 4px #a855f7;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100vh;
+    background-color: var(--color-lumia-bg, #090a0f);
+    color: #f1f5f9;
+    font-family: var(--font-sans);
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom dark observatory scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3b185f;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #581c87;
+}

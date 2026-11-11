@@ -1,0 +1,75 @@
+"""Module 10 FastAPI application factory, v1 router, lifespan state, and HTTP schemas."""
+
+from __future__ import annotations
+
+from LUMIA.api.auth import (
+    AccessTokenResponse,
+    JWTClaims,
+    JWTCodec,
+    LoginRequest,
+    OperatorProfileResponse,
+    WebSocketTicketResponse,
+)
+from LUMIA.api.main import create_app
+from LUMIA.api.routes import (
+    APIState,
+    SafeIdentifierPath,
+    StateDep,
+    get_api_state,
+    router,
+)
+from LUMIA.api.schemas import (
+    APIErrorResponse,
+    CandidateCutoutEpoch,
+    CandidateCutoutSequenceResponse,
+    CandidateDetailResponse,
+    CandidateListResponse,
+    CandidateTriageRequest,
+    CandidateTriageResponse,
+    CatalogQueryResponse,
+    CatalogStarItem,
+    CutoutStampSize,
+    DetectionSummaryResponse,
+    JobListResponse,
+    JobStatusResponse,
+    JobSubmissionRequest,
+    PipelineStatusResponse,
+    SettingsResponse,
+    SettingsUpdateRequest,
+    TriageQueueItem,
+    TriageQueueResponse,
+)
+
+__all__ = [
+    "APIErrorResponse",
+    "APIState",
+    "AccessTokenResponse",
+    "CandidateCutoutEpoch",
+    "CandidateCutoutSequenceResponse",
+    "CandidateDetailResponse",
+    "CandidateListResponse",
+    "CandidateTriageRequest",
+    "CandidateTriageResponse",
+    "CatalogQueryResponse",
+    "CatalogStarItem",
+    "CutoutStampSize",
+    "DetectionSummaryResponse",
+    "JWTClaims",
+    "JWTCodec",
+    "JobListResponse",
+    "JobStatusResponse",
+    "JobSubmissionRequest",
+    "LoginRequest",
+    "OperatorProfileResponse",
+    "PipelineStatusResponse",
+    "SafeIdentifierPath",
+    "SettingsResponse",
+    "SettingsUpdateRequest",
+    "StateDep",
+    "TriageQueueItem",
+    "TriageQueueResponse",
+    "WebSocketTicketResponse",
+    "create_app",
+    "get_api_state",
+    "router",
+]

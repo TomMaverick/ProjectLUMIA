@@ -1,0 +1,548 @@
+{
+  "catalog_version": "1.1.0",
+  "description": "Project LUMIA Target Solar System Objects Catalog for multi-epoch ephemeris retrieval and training dataset mining.",
+  "targets": [
+    {
+      "object_id": "99942",
+      "name": "Apophis",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [15.0, 21.5],
+      "spk_id": "2099942",
+      "designation": "99942 Apophis",
+      "has_coma": false,
+      "h_mag": 19.7
+    },
+    {
+      "object_id": "101955",
+      "name": "Bennu",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [18.0, 22.0],
+      "spk_id": "2101955",
+      "designation": "101955 Bennu",
+      "has_coma": false,
+      "h_mag": 20.6
+    },
+    {
+      "object_id": "2024 YR4",
+      "name": "2024 YR4",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [19.0, 23.5],
+      "spk_id": "3999999",
+      "designation": "2024 YR4",
+      "has_coma": false,
+      "h_mag": 23.8
+    },
+    {
+      "object_id": "65803",
+      "name": "Didymos",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [14.5, 21.0],
+      "spk_id": "2065803",
+      "designation": "65803 Didymos",
+      "has_coma": false,
+      "h_mag": 18.0
+    },
+    {
+      "object_id": "2023 DW",
+      "name": "2023 DW",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [19.5, 24.0],
+      "spk_id": "3999998",
+      "designation": "2023 DW",
+      "has_coma": false,
+      "h_mag": 24.2
+    },
+    {
+      "object_id": "4179",
+      "name": "Toutatis",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [10.5, 19.5],
+      "spk_id": "2004179",
+      "designation": "4179 Toutatis",
+      "has_coma": false,
+      "h_mag": 15.3
+    },
+    {
+      "object_id": "1620",
+      "name": "Geographos",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [12.0, 19.5],
+      "spk_id": "2001620",
+      "designation": "1620 Geographos",
+      "has_coma": false,
+      "h_mag": 15.6
+    },
+    {
+      "object_id": "3200",
+      "name": "Phaethon",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [10.5, 18.0],
+      "spk_id": "2003200",
+      "designation": "3200 Phaethon",
+      "has_coma": false,
+      "h_mag": 14.5
+    },
+    {
+      "object_id": "433",
+      "name": "Eros",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [7.0, 15.5],
+      "spk_id": "2000433",
+      "designation": "433 Eros",
+      "has_coma": false,
+      "h_mag": 11.16
+    },
+    {
+      "object_id": "162173",
+      "name": "Ryugu",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [17.0, 21.5],
+      "spk_id": "2162173",
+      "designation": "162173 Ryugu",
+      "has_coma": false,
+      "h_mag": 19.2
+    },
+    {
+      "object_id": "25143",
+      "name": "Itokawa",
+      "taxonomy_class": "NEO",
+      "magnitude_range": [15.5, 21.0],
+      "spk_id": "2025143",
+      "designation": "25143 Itokawa",
+      "has_coma": false,
+      "h_mag": 19.2
+    },
+    {
+      "object_id": "1",
+      "name": "Ceres",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [6.7, 9.3],
+      "spk_id": "2000001",
+      "designation": "1 Ceres",
+      "has_coma": false,
+      "h_mag": 3.34
+    },
+    {
+      "object_id": "2",
+      "name": "Pallas",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [6.5, 10.6],
+      "spk_id": "2000002",
+      "designation": "2 Pallas",
+      "has_coma": false,
+      "h_mag": 4.13
+    },
+    {
+      "object_id": "3",
+      "name": "Juno",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [7.5, 11.5],
+      "spk_id": "2000003",
+      "designation": "3 Juno",
+      "has_coma": false,
+      "h_mag": 5.33
+    },
+    {
+      "object_id": "4",
+      "name": "Vesta",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [5.2, 8.5],
+      "spk_id": "2000004",
+      "designation": "4 Vesta",
+      "has_coma": false,
+      "h_mag": 3.20
+    },
+    {
+      "object_id": "5",
+      "name": "Astraea",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [9.0, 12.5],
+      "spk_id": "2000005",
+      "designation": "5 Astraea",
+      "has_coma": false,
+      "h_mag": 6.85
+    },
+    {
+      "object_id": "6",
+      "name": "Hebe",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [7.5, 11.5],
+      "spk_id": "2000006",
+      "designation": "6 Hebe",
+      "has_coma": false,
+      "h_mag": 5.71
+    },
+    {
+      "object_id": "7",
+      "name": "Iris",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [7.0, 11.2],
+      "spk_id": "2000007",
+      "designation": "7 Iris",
+      "has_coma": false,
+      "h_mag": 5.51
+    },
+    {
+      "object_id": "8",
+      "name": "Flora",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [8.0, 12.0],
+      "spk_id": "2000008",
+      "designation": "8 Flora",
+      "has_coma": false,
+      "h_mag": 6.49
+    },
+    {
+      "object_id": "9",
+      "name": "Metis",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [8.5, 12.2],
+      "spk_id": "2000009",
+      "designation": "9 Metis",
+      "has_coma": false,
+      "h_mag": 6.28
+    },
+    {
+      "object_id": "10",
+      "name": "Hygiea",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [9.0, 12.5],
+      "spk_id": "2000010",
+      "designation": "10 Hygiea",
+      "has_coma": false,
+      "h_mag": 5.43
+    },
+    {
+      "object_id": "11",
+      "name": "Parthenope",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [8.8, 12.5],
+      "spk_id": "2000011",
+      "designation": "11 Parthenope",
+      "has_coma": false,
+      "h_mag": 6.55
+    },
+    {
+      "object_id": "12",
+      "name": "Victoria",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [9.3, 13.0],
+      "spk_id": "2000012",
+      "designation": "12 Victoria",
+      "has_coma": false,
+      "h_mag": 7.24
+    },
+    {
+      "object_id": "13",
+      "name": "Egeria",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [9.5, 13.2],
+      "spk_id": "2000013",
+      "designation": "13 Egeria",
+      "has_coma": false,
+      "h_mag": 6.74
+    },
+    {
+      "object_id": "14",
+      "name": "Irene",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [8.8, 12.6],
+      "spk_id": "2000014",
+      "designation": "14 Irene",
+      "has_coma": false,
+      "h_mag": 6.30
+    },
+    {
+      "object_id": "15",
+      "name": "Eunomia",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [7.9, 11.8],
+      "spk_id": "2000015",
+      "designation": "15 Eunomia",
+      "has_coma": false,
+      "h_mag": 5.28
+    },
+    {
+      "object_id": "16",
+      "name": "Psyche",
+      "taxonomy_class": "MBA",
+      "magnitude_range": [9.2, 12.8],
+      "spk_id": "2000016",
+      "designation": "16 Psyche",
+      "has_coma": false,
+      "h_mag": 5.90
+    },
+    {
+      "object_id": "C/2020 F3",
+      "name": "NEOWISE",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [1.0, 18.0],
+      "spk_id": "1003667",
+      "designation": "C/2020 F3 (NEOWISE)",
+      "has_coma": true,
+      "h_mag": 11.5
+    },
+    {
+      "object_id": "67P",
+      "name": "Churyumov-Gerasimenko",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [11.0, 20.5],
+      "spk_id": "90000703",
+      "designation": "67P/Churyumov-Gerasimenko",
+      "has_coma": true,
+      "h_mag": 15.3
+    },
+    {
+      "object_id": "1P",
+      "name": "Halley",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [0.0, 25.0],
+      "spk_id": "90000022",
+      "designation": "1P/Halley",
+      "has_coma": true,
+      "h_mag": 5.5
+    },
+    {
+      "object_id": "103P",
+      "name": "Hartley 2",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [7.5, 21.0],
+      "spk_id": "90000960",
+      "designation": "103P/Hartley 2",
+      "has_coma": true,
+      "h_mag": 14.2
+    },
+    {
+      "object_id": "9P",
+      "name": "Tempel 1",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [9.5, 21.0],
+      "spk_id": "90000192",
+      "designation": "9P/Tempel 1",
+      "has_coma": true,
+      "h_mag": 13.9
+    },
+    {
+      "object_id": "C/2006 P1",
+      "name": "McNaught",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [-5.0, 20.0],
+      "spk_id": "1003668",
+      "designation": "C/2006 P1 (McNaught)",
+      "has_coma": true,
+      "h_mag": 9.5
+    },
+    {
+      "object_id": "17P",
+      "name": "Holmes",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [2.5, 21.5],
+      "spk_id": "90000287",
+      "designation": "17P/Holmes",
+      "has_coma": true,
+      "h_mag": 14.5
+    },
+    {
+      "object_id": "2P",
+      "name": "Encke",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [6.0, 21.0],
+      "spk_id": "90000091",
+      "designation": "2P/Encke",
+      "has_coma": true,
+      "h_mag": 14.1
+    },
+    {
+      "object_id": "109P",
+      "name": "Swift-Tuttle",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [4.0, 24.0],
+      "spk_id": "90000985",
+      "designation": "109P/Swift-Tuttle",
+      "has_coma": true,
+      "h_mag": 11.9
+    },
+    {
+      "object_id": "19P",
+      "name": "Borrelly",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [9.0, 21.0],
+      "spk_id": "90000306",
+      "designation": "19P/Borrelly",
+      "has_coma": true,
+      "h_mag": 14.3
+    },
+    {
+      "object_id": "81P",
+      "name": "Wild 2",
+      "taxonomy_class": "COMET",
+      "magnitude_range": [9.5, 21.5],
+      "spk_id": "90000863",
+      "designation": "81P/Wild 2",
+      "has_coma": true,
+      "h_mag": 14.6
+    },
+    {
+      "object_id": "134340",
+      "name": "Pluto",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [13.6, 16.3],
+      "spk_id": "2134340",
+      "designation": "134340 Pluto",
+      "has_coma": false,
+      "h_mag": -0.7
+    },
+    {
+      "object_id": "50000",
+      "name": "Quaoar",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [18.2, 19.5],
+      "spk_id": "2050000",
+      "designation": "50000 Quaoar",
+      "has_coma": false,
+      "h_mag": 2.7
+    },
+    {
+      "object_id": "90377",
+      "name": "Sedna",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [20.5, 21.8],
+      "spk_id": "2090377",
+      "designation": "90377 Sedna",
+      "has_coma": false,
+      "h_mag": 1.6
+    },
+    {
+      "object_id": "2060",
+      "name": "Chiron",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [15.0, 19.0],
+      "spk_id": "2002060",
+      "designation": "2060 Chiron",
+      "has_coma": true,
+      "h_mag": 6.1
+    },
+    {
+      "object_id": "20000",
+      "name": "Varuna",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [19.5, 20.8],
+      "spk_id": "2020000",
+      "designation": "20000 Varuna",
+      "has_coma": false,
+      "h_mag": 3.7
+    },
+    {
+      "object_id": "136108",
+      "name": "Haumea",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [17.0, 17.8],
+      "spk_id": "2136108",
+      "designation": "136108 Haumea",
+      "has_coma": false,
+      "h_mag": 0.2
+    },
+    {
+      "object_id": "136472",
+      "name": "Makemake",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [16.8, 17.4],
+      "spk_id": "2136472",
+      "designation": "136472 Makemake",
+      "has_coma": false,
+      "h_mag": -0.3
+    },
+    {
+      "object_id": "136199",
+      "name": "Eris",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [18.4, 19.1],
+      "spk_id": "2136199",
+      "designation": "136199 Eris",
+      "has_coma": false,
+      "h_mag": -1.17
+    },
+    {
+      "object_id": "28978",
+      "name": "Ixion",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [19.2, 20.3],
+      "spk_id": "2028978",
+      "designation": "28978 Ixion",
+      "has_coma": false,
+      "h_mag": 3.8
+    },
+    {
+      "object_id": "225088",
+      "name": "Gonggong",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [20.8, 21.8],
+      "spk_id": "2225088",
+      "designation": "225088 Gonggong",
+      "has_coma": false,
+      "h_mag": 1.8
+    },
+    {
+      "object_id": "90482",
+      "name": "Orcus",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [18.8, 19.6],
+      "spk_id": "2090482",
+      "designation": "90482 Orcus",
+      "has_coma": false,
+      "h_mag": 2.3
+    },
+    {
+      "object_id": "120347",
+      "name": "Salacia",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [20.0, 21.2],
+      "spk_id": "2120347",
+      "designation": "120347 Salacia",
+      "has_coma": false,
+      "h_mag": 4.2
+    },
+    {
+      "object_id": "5145",
+      "name": "Pholus",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [19.0, 22.5],
+      "spk_id": "2005145",
+      "designation": "5145 Pholus",
+      "has_coma": false,
+      "h_mag": 7.0
+    },
+    {
+      "object_id": "10199",
+      "name": "Chariklo",
+      "taxonomy_class": "TNO",
+      "magnitude_range": [17.5, 19.5],
+      "spk_id": "2010199",
+      "designation": "10199 Chariklo",
+      "has_coma": false,
+      "h_mag": 6.4
+    },
+    {
+      "object_id": "2I",
+      "name": "Borisov",
+      "taxonomy_class": "ISO",
+      "magnitude_range": [15.0, 22.0],
+      "spk_id": "1003632",
+      "designation": "2I/Borisov",
+      "has_coma": true,
+      "is_candidate": false,
+      "h_mag": 12.0
+    },
+    {
+      "object_id": "3I",
+      "name": "ATLAS",
+      "taxonomy_class": "ISO",
+      "magnitude_range": [16.0, 22.0],
+      "spk_id": "1003988",
+      "designation": "C/2025 N1 (ATLAS)",
+      "has_coma": true,
+      "is_candidate": true,
+      "h_mag": 13.0
+    }
+  ]
+}

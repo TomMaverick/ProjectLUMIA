@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <defs>
+    <!-- Background Gradient -->
+    linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f0717" />
+      <stop offset="100%" stop-color="#1e1b4b" />
+    
+    
+    <!-- Accent Glow Filter -->
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+
+    <!-- Asteroid Trail Gradient -->
+    <linearGradient id="trailGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee" stop-opacity="0" />
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded App Container / Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Astrometric Grid & Telescope Reticle -->
+  <g stroke="#3b0764" stroke-width="2" stroke-dasharray="6 6" opacity="0.6">
+    <line x1="256" y1="60" x2="256" y2="452" />
+    <line x1="60" y1="256" x2="452" y2="256" />
+    <circle cx="256" cy="256" r="140" fill="none" />
+    <circle cx="256" cy="256" r="80" fill="none" />
+  </g>
+
+  <!-- Neural Net / Subtraction Core Representation -->
+  <g stroke="#7c3aed" stroke-width="3" fill="none" opacity="0.8">
+    <path d="M 156 156 L 256 110 L 356 156 L 402 256 L 356 356 L 256 402 L 156 356 L 110 256 Z" />
+    <path d="M 256 110 L 256 256 L 402 256" />
+    <path d="M 156 156 L 256 256 L 156 356" />
+    <path d="M 356 156 L 256 256 L 356 356" />
+  </g>
+
+  <!-- Node Junction Dots -->
+  <g fill="#c084fc">
+    <circle cx="156" cy="156" r="6" />
+    <circle cx="356" cy="156" r="6" />
+    <circle cx="356" cy="356" r="6" />
+    <circle cx="156" cy="356" r="6" />
+    <circle cx="256" cy="110" r="6" />
+    <circle cx="402" cy="256" r="6" />
+    <circle cx="256" cy="402" r="6" />
+    <circle cx="110" cy="256" r="6" />
+  </g>
+
+  <!-- Moving Asteroid Tracklet / Trajectory (The Low-SNR Discovery) -->
+  <path d="M 170 340 L 310 180" stroke="url(#trailGrad)" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Detected Asteroid Candidate (High-Intensity Core with Cyan Glow) -->
+  <circle cx="310" cy="180" r="10" fill="#22d3ee" filter="url(#glow)" />
+  <circle cx="310" cy="180" r="5" fill="#ffffff" />
+
+  <!-- Sub-pixel Error Crosshair on Target -->
+  <g stroke="#22d3ee" stroke-width="2" opacity="0.9">
+    <line x1="310" y1="158" x2="310" y2="170" />
+    <line x1="310" y1="190" x2="310" y2="202" />
+    <line x1="288" y1="180" x2="300" y2="180" />
+    <line x1="320" y1="180" x2="332" y2="180" />
+  </g>
+</svg>
